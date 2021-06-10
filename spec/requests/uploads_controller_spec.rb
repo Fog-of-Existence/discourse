@@ -20,7 +20,7 @@ describe UploadsController do
       let(:logo_filename) { File.basename(logo_file) }
 
       let(:logo) { Rack::Test::UploadedFile.new(logo_file) }
-      let(:fake_jpg) { Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg")) }
+      let(:fake_jpg) { fixture_file_upload("../images/fake.jpg") }
       let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
 
       it 'expects a type' do
@@ -39,7 +39,7 @@ describe UploadsController do
         set_cdn_url "https://awesome.com"
 
         upload = UploadCreator.new(logo_file, "logo.png").create_for(-1)
-        logo = Rack::Test::UploadedFile.new(file_from_fixtures("logo.png"))
+        logo = fixture_file_upload("../images/logo.png")
 
         post "/uploads.json", params: { file: logo, type: "site_setting", for_site_setting: "true" }
         expect(response.status).to eq 200

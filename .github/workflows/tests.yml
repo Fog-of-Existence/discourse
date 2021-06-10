@@ -6,6 +6,7 @@ on:
     branches:
       - master
       - main
+      - debug
 
 jobs:
   build:
@@ -26,8 +27,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend]
-        target: [core, plugins]
+        build_type: [backend]
+        target: [core]
         postgres: ["13"]
         redis: ["6.x"]
 
@@ -108,6 +109,26 @@ jobs:
         run: |
           bin/rake parallel:create
           bin/rake parallel:migrate
+
+      - name: Core RSpec [debug 1]
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: ls -al
+
+      - name: Core RSpec [debug 2]
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: ls -al ./spec/fixtures/json
+
+      - name: Core RSpec [debug 3]
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: ls -al ./spec/fixtures/json/import-export.json
+
+      - name: Core RSpec [debug 4]
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: cat ./spec/fixtures/json/import-export.json
+
+      - name: Core RSpec [debug 5]
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/rspec ./spec/import_export/importer_spec.rb
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
